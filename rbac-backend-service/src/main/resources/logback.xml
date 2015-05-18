@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	
+	<appender name="ROOT_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<!-- Console will only log info level(above, as well) message -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ROOT_FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${catalina.home}/logs/rbac.log</file> <!-- When deploying the app into tomcat, put the logs into the folder "/logs" under catalina.home-->
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<FileNamePattern>rbac.log.%i.bak</FileNamePattern>
+			<MinIndex>1</MinIndex>
+			<MaxIndex>12</MaxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>200MB</MaxFileSize>
+		</triggeringPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n
+			</Pattern>
+		</layout>
+	</appender>
+
+	<root level="DEBUG">
+		<appender-ref ref="ROOT_STDOUT" />
+		<appender-ref ref="ROOT_FILE" />
+	</root>
+
+</configuration>

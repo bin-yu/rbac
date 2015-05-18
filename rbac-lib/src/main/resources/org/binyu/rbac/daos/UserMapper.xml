@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.binyu.rbac.daos.UserMapper">
+	<insert id="addUser" useGeneratedKeys="true" keyProperty="id">
+		insert
+		into USER(name,password,create_time,deleted)
+		values (#{name},#{password},#{createTime},#{deleted})
+	</insert>
+	<select id="getUserByName" resultMap="UserMap">
+		SELECT *
+		FROM USER
+		WHERE NAME = #{name}
+	</select>
+	<delete id="deleteUserByName">
+		DELETE
+		FROM USER
+		WHERE NAME = #{name}
+	</delete>
+
+	<resultMap id="UserMap" type="org.binyu.rbac.dtos.User">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="password" column="password" />
+		<result property="createTime" column="CREATE_TIME" />
+		<result property="updateTime" column="UPDATE_TIME" />
+		<result property="deleted" column="deleted" />
+	</resultMap>
+</mapper>

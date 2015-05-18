@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.binyu.rbac.daos.RoleMapper">
+	<select id="getAllRoles" resultMap="RoleMap">
+		SELECT *
+		FROM ROLE
+	</select>
+	<select id="getRolesByUserId" resultMap="RoleMap">
+		SELECT ROLE.ID AS ID,ROLE.NAME AS NAME
+		FROM ROLE
+		INNER JOIN USER_ROLE ON USER_ROLE.ROLE_ID=ROLE.ID
+		WHERE USER_ROLE.USER_ID=#{userId}
+	</select>
+	<select id="getRolesByUsername" resultMap="RoleMap">
+		SELECT ROLE.ID AS ID,ROLE.NAME AS NAME
+		FROM ROLE
+		INNER JOIN USER_ROLE ON USER_ROLE.ROLE_ID=ROLE.ID
+		INNER JOIN USER ON USER.ID=USER_ROLE.USER_ID
+		WHERE USER.NAME=#{username}
+	</select>
+	<select id="getRoleNamesByUsername" resultType="string">
+		SELECT ROLE.NAME AS NAME
+		FROM ROLE
+		INNER JOIN USER_ROLE ON USER_ROLE.ROLE_ID=ROLE.ID
+		INNER JOIN USER ON USER.ID=USER_ROLE.USER_ID
+		WHERE USER.NAME=#{username}
+	</select>
+	
+	<select id="getRolesByName" resultMap="RoleMap">
+		SELECT *
+		FROM ROLE
+		WHERE NAME=#{name}
+	</select>
+	<insert id="addRole" useGeneratedKeys="true" keyProperty="id">
+		INSERT
+		INTO ROLE(NAME)
+		VALUES (#{name})
+	</insert>
+	<delete id="deleteRole">
+		DELETE
+		FROM ROLE
+		WHERE NAME=#{name}
+	</delete>
+
+	<resultMap id="RoleMap" type="org.binyu.rbac.dtos.Role">
+		<id property="id" column="ID" />
+		<result property="name" column="NAME" />
+	</resultMap>
+</mapper>

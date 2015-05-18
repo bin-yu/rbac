@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.binyu</groupId>
+	<artifactId>rbac</artifactId>
+	<version>0.0.1</version>
+	<packaging>pom</packaging>
+
+	<name>rbac</name>
+	<description>rbac parent pom</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.2.3.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.7</java.version>
+		<mybatis.version>3.2.4</mybatis.version>
+		<mybatis.spring.version>1.2.2</mybatis.spring.version>
+		<mysql.version>5.1.8</mysql.version>
+		<testng.version>6.8.8</testng.version>
+	</properties>
+	<modules>
+        <module>rbac-lib</module>
+	    <module>rbac-lib-example</module>
+       	<module>rbac-backend-service</module>
+    </modules>
+
+</project>

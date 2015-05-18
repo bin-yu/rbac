@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.binyu.rbac.daos.UserRoleMapper">
+	<insert id="addUserRole">
+		insert
+		into USER_ROLE
+		values (#{userId},#{roleId})
+	</insert>
+	<delete id="deleteUserRolesByUserId">
+		DELETE
+		FROM USER_ROLE
+		WHERE USER_ID=#{userId}
+	</delete>
+</mapper>
