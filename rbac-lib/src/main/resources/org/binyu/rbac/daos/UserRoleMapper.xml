@@ -13,4 +13,9 @@
 		FROM USER_ROLE
 		WHERE USER_ID=#{userId}
 	</delete>
+	<select id="getRoleIdsByUserId" resultType="java.lang.Integer">
+		SELECT ROLE_ID
+		FROM USER_ROLE
+		WHERE USER_ID=#{userId}
+	</select>
 </mapper>

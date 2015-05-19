@@ -5,20 +5,41 @@
 <mapper namespace="org.binyu.rbac.daos.UserMapper">
 	<insert id="addUser" useGeneratedKeys="true" keyProperty="id">
 		insert
-		into USER(name,password,create_time,deleted)
-		values (#{name},#{password},#{createTime},#{deleted})
+		into USER(name,password,create_time,update_time,deleted)
+		values
+		(#{name},#{password},#{createTime},#{updateTime},#{deleted})
 	</insert>
 	<select id="getUserByName" resultMap="UserMap">
 		SELECT *
 		FROM USER
-		WHERE NAME = #{name}
+		WHERE NAME
+		= #{name}
+	</select>
+	<select id="getUserById" resultMap="UserMap">
+		SELECT *
+		FROM USER
+		WHERE ID =
+		#{id}
+	</select>
+	<select id="getAllUsers" resultMap="UserMap">
+		SELECT *
+		FROM USER
 	</select>
 	<delete id="deleteUserByName">
 		DELETE
 		FROM USER
 		WHERE NAME = #{name}
 	</delete>
-
+	<delete id="deleteUserById">
+		DELETE
+		FROM USER
+		WHERE ID = #{id}
+	</delete>
+	<update id="updateUser">
+		update USER
+		set name=#{name},password=#{password},update_time=#{updateTime},deleted=#{deleted}
+		where id=#{id}
+	</update>
 	<resultMap id="UserMap" type="org.binyu.rbac.dtos.User">
 		<id property="id" column="id" />
 		<result property="name" column="name" />

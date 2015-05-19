@@ -28,10 +28,15 @@
 		WHERE USER.NAME=#{username}
 	</select>
 	
-	<select id="getRolesByName" resultMap="RoleMap">
+	<select id="getRoleByName" resultMap="RoleMap">
 		SELECT *
 		FROM ROLE
 		WHERE NAME=#{name}
+	</select>
+	<select id="getRoleById" resultMap="RoleMap">
+		SELECT *
+		FROM ROLE
+		WHERE ID=#{id}
 	</select>
 	<insert id="addRole" useGeneratedKeys="true" keyProperty="id">
 		INSERT
@@ -42,6 +47,11 @@
 		DELETE
 		FROM ROLE
 		WHERE NAME=#{name}
+	</delete>
+	<delete id="deleteRoleById">
+		DELETE
+		FROM ROLE
+		WHERE ID=#{id}
 	</delete>
 
 	<resultMap id="RoleMap" type="org.binyu.rbac.dtos.Role">

@@ -72,6 +72,20 @@ public class ServiceExceptionHandler extends ResponseEntityExceptionHandler
   }
 
   /**
+   * For RestResourceNotFoundException exceptions, return NOT_FOUND status code
+   * @param ex
+   * @param request
+   * @return
+   */
+  @ExceptionHandler({ RestResourceNotFoundException.class })
+  public ResponseEntity<Map<String, Object>> handleRestResourceNotFoundException(
+      RestResourceNotFoundException ex, HttpServletRequest request)
+  {
+    return createErrorResponse(HttpStatus.NOT_FOUND, request,
+        ex.getMessage());
+  }
+
+  /**
    * For other exceptions, return internal server error
    * 
    * @param ex

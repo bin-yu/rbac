@@ -11,10 +11,11 @@
 // PACKAGE/IMPORTS --------------------------------------------------
 package org.binyu.rbac.backend.controllers;
 
+import org.binyu.rbac.backend.controllers.dtos.ExtRole;
+import org.binyu.rbac.backend.controllers.dtos.ExtUser;
 import org.binyu.rbac.dtos.Role;
 import org.binyu.rbac.dtos.User;
-import org.binyu.rbac.dtos.UserRole;
-import org.binyu.rbac.services.RoleManagementService;
+import org.binyu.rbac.exceptions.ServiceInputValidationException;
 import org.binyu.rbac.services.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,61 +32,78 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/users")
-public class UserController {
-	// CONSTANTS ------------------------------------------------------
+public class UserController
+{
+  // CONSTANTS ------------------------------------------------------
 
-	// CLASS VARIABLES ------------------------------------------------
+  // CLASS VARIABLES ------------------------------------------------
 
-	// INSTANCE VARIABLES ---------------------------------------------
-	@Autowired
-	private UserManagementService userSrv;
-	@Autowired
-	private RoleManagementService roleSrv;
+  // INSTANCE VARIABLES ---------------------------------------------
+  @Autowired
+  private UserManagementService userSrv;
 
-	// CONSTRUCTORS ---------------------------------------------------
+  // CONSTRUCTORS ---------------------------------------------------
 
-	// PUBLIC METHODS -------------------------------------------------
-	@RequestMapping(method = RequestMethod.POST)
-	@Transactional(rollbackFor = Throwable.class)
-	public void addUser(@RequestBody User user) {
-		userSrv.addUser(user);
-	}
+  // PUBLIC METHODS -------------------------------------------------
 
-	@RequestMapping(value = "/{name}", method = RequestMethod.DELETE)
-	@Transactional(rollbackFor = Throwable.class)
-	public void deleteUser(@PathVariable String name) {
-		userSrv.deleteUserByName(name);
-	}
+  @RequestMapping(method = RequestMethod.GET)
+  public ExtUser[] getAllUsers()
+  {
+    User[] users = userSrv.getAllUsers();
+    ExtUser[] extUsers = new ExtUser[users.length];
+    for (int i = 0; i < users.length; i++)
+    {
+      extUsers[i] = ExtUser.fromInternal(users[i]);
+    }
+    return extUsers;
+  }
 
-	@RequestMapping(value = "/{username}/roles", method = RequestMethod.PUT)
-	@Transactional(rollbackFor = Throwable.class)
-	public void assignRoles(
-			@PathVariable String username,
-			@RequestParam(required = false, defaultValue = "true") boolean overwrite,
-			@RequestBody String[] roleNames) throws Exception {
-		User user = userSrv.getUserByName(username);
-		if (user == null) {
-			throw new Exception("User [" + username + "] not exist.");
-		}
-		if (overwrite) {
-			userSrv.deleteUserRolesByUserId(user.getId());
-		}
-		for (String roleName : roleNames) {
-			Role role = roleSrv.getRolesByName(roleName);
-			if (role != null) {
-				userSrv.addUserRole(new UserRole(user.getId(), role.getId()));
-			}
-		}
-	}
+  @RequestMapping(method = RequestMethod.POST)
+  @Transactional(rollbackFor = Throwable.class)
+  public ExtUser addUser(@RequestBody ExtUser user) throws ServiceInputValidationException
+  {
+    User internalUser = user.toInternal();
+    userSrv.addUser(internalUser);
+    return ExtUser.fromInternal(internalUser);
+  }
 
-	@RequestMapping(value = "/{username}/roles", method = RequestMethod.GET)
-	public String[] getUserRoles(@PathVariable String username) {
-		return roleSrv.getRoleNamesByUsername(username);
-	}
-	// PROTECTED METHODS ----------------------------------------------
+  @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+  @Transactional(rollbackFor = Throwable.class)
+  public void deleteUser(@PathVariable int id)
+  {
+    userSrv.deleteUserById(id);
+  }
 
-	// PRIVATE METHODS ------------------------------------------------
+  @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+  @Transactional(rollbackFor = Throwable.class)
+  public ExtUser updateUser(@PathVariable int id, @RequestBody ExtUser extUser)
+  {
+    extUser.setId(id);
+    User iUser = extUser.toInternal();
+    userSrv.updateUser(iUser);
+    return ExtUser.fromInternal(iUser);
+  }
 
-	// ACCESSOR METHODS -----------------------------------------------
+  @RequestMapping(value = "/{userId}/roles", method = RequestMethod.PUT)
+  @Transactional(rollbackFor = Throwable.class)
+  public void assignRoles(
+      @PathVariable int userId,
+      @RequestBody int[] roleIds,
+      @RequestParam(required = false, defaultValue = "true") boolean overwrite) throws Exception
+  {
+    userSrv.assignRoles(userId, roleIds, overwrite);
+  }
+
+  @RequestMapping(value = "/{userId}/roles", method = RequestMethod.GET)
+  public ExtRole[] getUserRoles(@PathVariable int userId) throws ServiceInputValidationException
+  {
+    Role[] roles = userSrv.getRolesByUserId(userId);
+    return ExtRole.fromInternal(roles);
+  }
+  // PROTECTED METHODS ----------------------------------------------
+
+  // PRIVATE METHODS ------------------------------------------------
+
+  // ACCESSOR METHODS -----------------------------------------------
 
 }

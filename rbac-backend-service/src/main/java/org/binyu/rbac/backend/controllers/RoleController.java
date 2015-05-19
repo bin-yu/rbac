@@ -11,8 +11,8 @@
 // PACKAGE/IMPORTS --------------------------------------------------
 package org.binyu.rbac.backend.controllers;
 
+import org.binyu.rbac.backend.controllers.dtos.ExtResourcePermission;
 import org.binyu.rbac.backend.controllers.dtos.ExtRole;
-import org.binyu.rbac.dtos.Resource;
 import org.binyu.rbac.dtos.ResourcePermission;
 import org.binyu.rbac.dtos.Role;
 import org.binyu.rbac.exceptions.ServiceInputValidationException;
@@ -53,12 +53,19 @@ public class RoleController
   public ExtRole[] getAllRoles()
   {
     Role[] roles = roleSrv.getAllRoles();
-    ExtRole[] extRoles = new ExtRole[roles.length];
-    for (int i = 0; i < roles.length; i++)
+    return ExtRole.fromInternal(roles);
+  }
+
+  @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+  @Transactional(rollbackFor = Throwable.class)
+  public ExtRole getRoleById(@PathVariable int id) throws RestResourceNotFoundException
+  {
+    Role role = roleSrv.getRoleById(id);
+    if (role == null)
     {
-      extRoles[i] = ExtRole.fromInternal(roles[i]);
+      throw new RestResourceNotFoundException("role not found for id[" + id + "].");
     }
-    return extRoles;
+    return ExtRole.fromInternal(role);
   }
 
   @RequestMapping(method = RequestMethod.POST)
@@ -69,45 +76,36 @@ public class RoleController
     return ExtRole.fromInternal(iRole);
   }
 
-  @RequestMapping(value = "/{name}", method = RequestMethod.DELETE)
+  @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
   @Transactional(rollbackFor = Throwable.class)
-  public void deleteRole(@PathVariable String name)
+  public void deleteRole(@PathVariable int id)
   {
-    roleSrv.deleteRole(name);
+    roleSrv.deleteRoleById(id);
   }
 
-  @RequestMapping(value = "/{roleName}/permissions", method = RequestMethod.PUT)
+  @RequestMapping(value = "/{roleId}/permissions", method = RequestMethod.PUT)
   @Transactional(rollbackFor = Throwable.class)
   public void setRolePermissions(
-      @PathVariable String roleName,
-      @RequestParam(required = false, defaultValue = "true") boolean overwrite,
-      @RequestBody ResourcePermission[] permissions) throws Exception
+      @PathVariable int roleId,
+      @RequestBody ExtResourcePermission[] permissions,
+      @RequestParam(required = false, defaultValue = "true") boolean overwrite) throws Exception
   {
-    Role role = roleSrv.getRolesByName(roleName);
-    if (role == null)
+    ResourcePermission[] ipermissions = new ResourcePermission[permissions.length];
+    for (int i = 0; i < permissions.length; i++)
     {
-      throw new Exception("role [" + roleName + "] not exist.");
+      ipermissions[i] = permissions[i].toInternal();
     }
-    if (overwrite)
-    {
-      roleSrv.deleteResourcePermissionsByRoleId(role.getId());
-    }
-    for (ResourcePermission permission : permissions)
-    {
-      Resource res = resSrv.getResourceByName(permission.getResource());
-      if (res != null)
-      {
-        roleSrv.addResourcePermissionToRole(role.getId(), res.getId(),
-            permission.getPermission());
-      }
-    }
+    roleSrv.setRolePermissions(roleId, ipermissions, overwrite);
+
   }
 
-  @RequestMapping(value = "/{roleName}/permissions", method = RequestMethod.GET)
-  public ResourcePermission[] getRolePermissions(@PathVariable String roleName)
+  @RequestMapping(value = "/{roleId}/permissions", method = RequestMethod.GET)
+  public ExtResourcePermission[] getRolePermissions(@PathVariable int roleId)
   {
-    return roleSrv.getResourcePermissionByRoleName(roleName);
+    ResourcePermission[] permArray = roleSrv.getResourcePermissionByRoleId(roleId);
+    return ExtResourcePermission.fromInternal(permArray);
   }
+
   // PROTECTED METHODS ----------------------------------------------
 
   // PRIVATE METHODS ------------------------------------------------

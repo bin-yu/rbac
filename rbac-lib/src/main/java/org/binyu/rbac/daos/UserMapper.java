@@ -28,4 +28,12 @@ public interface UserMapper
   User getUserByName(String name);
 
   void deleteUserByName(String name);
+
+  User[] getAllUsers();
+
+  User getUserById(int id);
+
+  void deleteUserById(int id);
+
+  void updateUser(User user);
 }

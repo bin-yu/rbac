@@ -27,4 +27,6 @@ public interface UserRoleMapper
 
   void deleteUserRolesByUserId(int userId);
 
+  Integer[] getRoleIdsByUserId(int userId);
+
 }

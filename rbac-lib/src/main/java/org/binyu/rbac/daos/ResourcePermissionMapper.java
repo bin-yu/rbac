@@ -21,21 +21,24 @@ import org.binyu.rbac.dtos.ResourcePermission;
  *
  */
 
-public interface ResourcePermissionMapper {
-	// CONSTANTS ------------------------------------------------------
+public interface ResourcePermissionMapper
+{
+  // CONSTANTS ------------------------------------------------------
 
-	// PUBLIC METHODS -------------------------------------------------
-	ResourcePermission[] getResourcePermissionsByUser(String username);
+  // PUBLIC METHODS -------------------------------------------------
+  ResourcePermission[] getResourcePermissionsByUser(String username);
 
-	void addResourcePermissionToRole(@Param(value = "roleId") int roleId,
-			@Param(value = "resourceId") int resourceId,
-			@Param(value = "permission") int permission);
+  void addResourcePermissionToRole(@Param(value = "roleId") int roleId,
+      @Param(value = "resourceId") int resourceId,
+      @Param(value = "permission") int permission);
 
-	ResourcePermission[] getResourcePermissionByRoleName(String roleName);
+  ResourcePermission[] getResourcePermissionByRoleName(String roleName);
 
-	void deleteResourcePermissionsByRoleId(int roleId);
+  void deleteResourcePermissionsByRoleId(int roleId);
 
-	List<ResourcePermission> getResourcePermissionByRoleNamesAndResourceName(
-			@Param(value = "roleList") List<String> roleList,
-			@Param(value = "res") String res);
+  List<ResourcePermission> getResourcePermissionByRoleNamesAndResourceName(
+      @Param(value = "roleList") List<String> roleList,
+      @Param(value = "res") String res);
+
+  ResourcePermission[] getResourcePermissionByRoleId(int roleId);
 }

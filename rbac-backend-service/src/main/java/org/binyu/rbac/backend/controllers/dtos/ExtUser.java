@@ -1,7 +1,7 @@
 /********************************************************************
- * File Name:    User.java
+ * File Name:    ExtUser.java
  *
- * Date Created: Apr 19, 2015
+ * Date Created: May 19, 2015
  *
  * ------------------------------------------------------------------
  * Copyright (C) 2010 Symantec Corporation. All Rights Reserved.
@@ -9,22 +9,18 @@
  *******************************************************************/
 
 // PACKAGE/IMPORTS --------------------------------------------------
-package org.binyu.rbac.dtos;
+package org.binyu.rbac.backend.controllers.dtos;
 
-import java.io.Serializable;
 import java.util.Date;
+
+import org.binyu.rbac.dtos.User;
 
 /**
  * TODO: Update with a detailed description of the interface/class.
  *
  */
-public class User implements Serializable
+public class ExtUser
 {
-
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 2553753600891920212L;
   // CONSTANTS ------------------------------------------------------
 
   // CLASS VARIABLES ------------------------------------------------
@@ -41,19 +37,12 @@ public class User implements Serializable
 
   // CONSTRUCTORS ---------------------------------------------------
 
-  public User()
+  public ExtUser()
   {
     super();
   }
 
-  public User(int id, String name)
-  {
-    super();
-    this.id = id;
-    this.name = name;
-  }
-
-  public User(int id, String name, String password, Date createTime, Date updateTime, int deleted)
+  public ExtUser(int id, String name, String password, Date createTime, Date updateTime, int deleted)
   {
     super();
     this.id = id;
@@ -64,14 +53,14 @@ public class User implements Serializable
     this.deleted = deleted;
   }
 
-  public User(User copy)
+  public static ExtUser fromInternal(User user)
   {
-    this.id = copy.id;
-    this.name = copy.name;
-    this.password = copy.password;
-    this.createTime = copy.createTime;
-    this.updateTime = copy.updateTime;
-    this.deleted = copy.deleted;
+    return new ExtUser(user.getId(), user.getName(), null, user.getCreateTime(), user.getUpdateTime(), user.getDeleted());
+  }
+
+  public User toInternal()
+  {
+    return new User(getId(), getName(), getPassword(), getCreateTime(), getUpdateTime(), getDeleted());
   }
 
   // PUBLIC METHODS -------------------------------------------------
@@ -85,7 +74,7 @@ public class User implements Serializable
   @Override
   public String toString()
   {
-    return "User [id=" + id + ", name=" + name + ", createTime=" + createTime + ", updateTime="
+    return "ExtUser [id=" + id + ", name=" + name + ", createTime=" + createTime + ", updateTime="
         + updateTime + ", deleted=" + deleted + "]";
   }
 
@@ -112,7 +101,7 @@ public class User implements Serializable
       return false;
     if (getClass() != obj.getClass())
       return false;
-    User other = (User) obj;
+    ExtUser other = (ExtUser) obj;
     if (createTime == null)
     {
       if (other.createTime != null)
@@ -207,4 +196,5 @@ public class User implements Serializable
   {
     this.deleted = deleted;
   }
+
 }

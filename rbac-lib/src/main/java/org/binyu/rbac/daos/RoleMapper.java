@@ -31,9 +31,13 @@ public interface RoleMapper
 
   void addRole(Role role);
 
-  Role getRolesByName(String name);
+  Role getRoleByName(String name);
 
   void deleteRole(String name);
 
   String[] getRoleNamesByUsername(String username);
+
+  void deleteRoleById(int id);
+
+  Role getRoleById(int id);
 }
