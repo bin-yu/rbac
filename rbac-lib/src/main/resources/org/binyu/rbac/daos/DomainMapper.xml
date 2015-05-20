@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.binyu.rbac.daos.DomainMapper">
+	<cache eviction="LRU" size="3" readOnly="true" />
+	<select id="getAllDomains" resultMap="DomainMap">
+		SELECT * FROM DOMAIN ORDER BY NAME
+	</select>
+
+	<resultMap id="DomainMap" type="org.binyu.rbac.dtos.Domain">
+		<result property="name" column="NAME" />
+		<result property="providerFactory" column="PROVIDER_FACTORY" />
+		<result property="params" column="PARAMETERS" />
+	</resultMap>
+</mapper>

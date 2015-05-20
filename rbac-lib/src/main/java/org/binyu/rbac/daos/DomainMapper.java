@@ -1,7 +1,7 @@
 /********************************************************************
- * File Name:    UserMapper.java
+ * File Name:    DomainMapper.java
  *
- * Date Created: Apr 19, 2015
+ * Date Created: Mar 29, 2015
  *
  * ------------------------------------------------------------------
  * Copyright (C) 2010 Symantec Corporation. All Rights Reserved.
@@ -11,30 +11,15 @@
 // PACKAGE/IMPORTS --------------------------------------------------
 package org.binyu.rbac.daos;
 
-import org.apache.ibatis.annotations.Param;
-import org.binyu.rbac.dtos.User;
+import org.binyu.rbac.dtos.Domain;
 
 /**
- * TODO: Update with a detailed description of the interface/class.
- *
+ * Mapper for Domain information access
  */
-public interface UserMapper
+public interface DomainMapper
 {
-
   // CONSTANTS ------------------------------------------------------
 
   // PUBLIC METHODS -------------------------------------------------
-  void addUser(User user);
-
-  User getUserByDomainAndName(@Param(value = "domain") String domain, @Param(value = "name") String name);
-
-  // void deleteUserByName(String name);
-
-  User[] getAllUsers();
-
-  User getUserById(int id);
-
-  void deleteUserById(int id);
-
-  void updateUser(User user);
+  Domain[] getAllDomains();
 }

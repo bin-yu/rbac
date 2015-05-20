@@ -1,13 +1,22 @@
+CREATE TABLE `DOMAIN` (
+        `NAME` varchar(64) NOT NULL,
+        `PROVIDER_FACTORY` varchar(64) NOT NULL,
+        `PARAMETERS` varchar(1024),
+        PRIMARY KEY (`NAME`)
+    );
+    
 CREATE TABLE `user` (
 `id`  int(11) NOT NULL AUTO_INCREMENT ,
 `name`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`domain`  varchar(64),
 `password` varchar(255),
 `create_time` DATETIME NOT NULL,
 `update_time` DATETIME,
 `deleted` TINYINT(1) DEFAULT '0',
-PRIMARY KEY (`id`)
+PRIMARY KEY (`id`),
+FOREIGN KEY (`DOMAIN`) REFERENCES DOMAIN (`NAME`)
 );
-CREATE UNIQUE INDEX `USER_IDX_NAME` ON `user`(`name`);
+CREATE UNIQUE INDEX `USER_IDX_NAME` ON `user`(`domain`,`name`);
 
 CREATE TABLE `role` (
 `id`  int(11) NOT NULL AUTO_INCREMENT ,

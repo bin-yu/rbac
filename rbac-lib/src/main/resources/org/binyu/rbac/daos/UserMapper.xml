@@ -5,15 +5,14 @@
 <mapper namespace="org.binyu.rbac.daos.UserMapper">
 	<insert id="addUser" useGeneratedKeys="true" keyProperty="id">
 		insert
-		into USER(name,password,create_time,update_time,deleted)
+		into USER(name,domain,password,create_time,update_time,deleted)
 		values
-		(#{name},#{password},#{createTime},#{updateTime},#{deleted})
+		(#{name},#{domain},#{password},#{createTime},#{updateTime},#{deleted})
 	</insert>
-	<select id="getUserByName" resultMap="UserMap">
+	<select id="getUserByDomainAndName" resultMap="UserMap">
 		SELECT *
 		FROM USER
-		WHERE NAME
-		= #{name}
+		WHERE DOMAIN= #{domain} AND NAME = #{name}
 	</select>
 	<select id="getUserById" resultMap="UserMap">
 		SELECT *
@@ -25,11 +24,11 @@
 		SELECT *
 		FROM USER
 	</select>
-	<delete id="deleteUserByName">
+	<!-- <delete id="deleteUserByName">
 		DELETE
 		FROM USER
 		WHERE NAME = #{name}
-	</delete>
+	</delete> -->
 	<delete id="deleteUserById">
 		DELETE
 		FROM USER
@@ -43,6 +42,7 @@
 	<resultMap id="UserMap" type="org.binyu.rbac.dtos.User">
 		<id property="id" column="id" />
 		<result property="name" column="name" />
+		<result property="domain" column="domain" />
 		<result property="password" column="password" />
 		<result property="createTime" column="CREATE_TIME" />
 		<result property="updateTime" column="UPDATE_TIME" />

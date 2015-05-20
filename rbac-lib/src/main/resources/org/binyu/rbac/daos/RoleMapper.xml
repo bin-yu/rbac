@@ -53,7 +53,19 @@
 		FROM ROLE
 		WHERE ID=#{id}
 	</delete>
-
+	<select id="getRolesByDomainAndUserNames" resultMap="RoleMap">
+		SELECT
+		ROLE.ID,ROLE.NAME
+		FROM ROLE
+		INNER JOIN USER_ROLE ON USER_ROLE.ROLE_ID=ROLE.ID
+		INNER JOIN USER ON USER.ID=USER_ROLE.USER_ID
+		WHERE USER.NAME IN
+		<foreach item="item" index="index" collection="userNames"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		AND USER.DOMAIN=#{domain}
+	</select>
 	<resultMap id="RoleMap" type="org.binyu.rbac.dtos.Role">
 		<id property="id" column="ID" />
 		<result property="name" column="NAME" />

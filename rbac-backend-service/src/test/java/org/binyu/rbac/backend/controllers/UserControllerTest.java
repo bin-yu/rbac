@@ -24,11 +24,12 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import java.io.IOException;
 import java.util.Date;
 
-import org.binyu.rbac.auth.EncryptionUtil;
+import org.binyu.rbac.auth.local.EncryptionUtil;
 import org.binyu.rbac.backend.AbstractIntegrationTest;
 import org.binyu.rbac.backend.controllers.dtos.ExtRole;
 import org.binyu.rbac.backend.controllers.dtos.ExtUser;
 import org.binyu.rbac.daos.UserRoleMapper;
+import org.binyu.rbac.dtos.Domain;
 import org.binyu.rbac.dtos.Role;
 import org.binyu.rbac.dtos.User;
 import org.binyu.rbac.services.RoleManagementService;
@@ -169,7 +170,7 @@ public class UserControllerTest extends AbstractIntegrationTest
   @Test
   public void testUpdateUser() throws Exception
   {
-    User iUser = userSrv.getUserByName("test");
+    User iUser = userSrv.getUserByDomainAndName(Domain.LOCAL_DOMAIN, "test");
     Assert.assertNotNull(iUser);
     ExtUser toUpdateUser = ExtUser.fromInternal(iUser);
     toUpdateUser.setName("newName");
@@ -276,8 +277,8 @@ public class UserControllerTest extends AbstractIntegrationTest
   @DataProvider(name = "getUserRolesData")
   private Object[][] getUserRolesData()
   {
-    User admin = userSrv.getUserByName("admin");
-    User userwoRole = userSrv.getUserByName("user_wo_role");
+    User admin = userSrv.getUserByDomainAndName(Domain.LOCAL_DOMAIN, "admin");
+    User userwoRole = userSrv.getUserByDomainAndName(Domain.LOCAL_DOMAIN, "user_wo_role");
     ExtRole adminRole = ExtRole.fromInternal(roleSrv.getRoleByName(ROLE_ADMIN));
     return new Object[][] {
       { admin.getId(), new ExtRole[] { adminRole } },
@@ -288,8 +289,8 @@ public class UserControllerTest extends AbstractIntegrationTest
   @DataProvider(name = "assignUserRolesData")
   private Object[][] assignUserRolesData()
   {
-    User admin = userSrv.getUserByName("admin");
-    User userwoRole = userSrv.getUserByName("user_wo_role");
+    User admin = userSrv.getUserByDomainAndName(Domain.LOCAL_DOMAIN, "admin");
+    User userwoRole = userSrv.getUserByDomainAndName(Domain.LOCAL_DOMAIN, "user_wo_role");
     Role adminRole = roleSrv.getRoleByName(ROLE_ADMIN);
     Role userRole = roleSrv.getRoleByName(ROLE_PLAIN_USER);
     return new Object[][] {

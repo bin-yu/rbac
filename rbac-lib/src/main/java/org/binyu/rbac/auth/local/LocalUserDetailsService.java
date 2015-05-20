@@ -9,10 +9,11 @@
  *******************************************************************/
 
 // PACKAGE/IMPORTS --------------------------------------------------
-package org.binyu.rbac.auth;
+package org.binyu.rbac.auth.local;
 
 import java.util.Arrays;
 
+import org.binyu.rbac.dtos.Domain;
 import org.binyu.rbac.dtos.Role;
 import org.binyu.rbac.dtos.User;
 import org.binyu.rbac.exceptions.ServiceInputValidationException;
@@ -59,7 +60,7 @@ public class LocalUserDetailsService implements UserDetailsService
         throw new UsernameNotFoundException(
             "the username can not be empty.");
       }
-      User user = userSrv.getUserByName(username);
+      User user = userSrv.getUserByDomainAndName(Domain.LOCAL_DOMAIN, username);
       if (user == null)
       {
         throw new UsernameNotFoundException("the username " + username

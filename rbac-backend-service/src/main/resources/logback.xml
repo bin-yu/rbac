@@ -22,7 +22,7 @@
 		</rollingPolicy>
 		<triggeringPolicy
 			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<MaxFileSize>200MB</MaxFileSize>
+			<MaxFileSize>10MB</MaxFileSize>
 		</triggeringPolicy>
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n

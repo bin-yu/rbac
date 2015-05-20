@@ -13,7 +13,7 @@ package org.binyu.rbac.auth;
 
 import java.lang.reflect.Method;
 
-import org.binyu.rbac.auth.EncryptionUtil;
+import org.binyu.rbac.auth.local.EncryptionUtil;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

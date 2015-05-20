@@ -13,6 +13,7 @@ package org.binyu.rbac.backend.controllers.dtos;
 
 import java.util.Date;
 
+import org.binyu.rbac.dtos.Domain;
 import org.binyu.rbac.dtos.User;
 
 /**
@@ -60,7 +61,7 @@ public class ExtUser
 
   public User toInternal()
   {
-    return new User(getId(), getName(), getPassword(), getCreateTime(), getUpdateTime(), getDeleted());
+    return new User(getId(), Domain.LOCAL_DOMAIN, getName(), getPassword(), getCreateTime(), getUpdateTime(), getDeleted());
   }
 
   // PUBLIC METHODS -------------------------------------------------

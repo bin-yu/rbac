@@ -9,7 +9,7 @@
  *******************************************************************/
 
 // PACKAGE/IMPORTS --------------------------------------------------
-package org.binyu.rbac.auth;
+package org.binyu.rbac.auth.local;
 
 import java.util.ArrayList;
 import java.util.List;

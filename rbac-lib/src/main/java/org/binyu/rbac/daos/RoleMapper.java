@@ -11,6 +11,9 @@
 // PACKAGE/IMPORTS --------------------------------------------------
 package org.binyu.rbac.daos;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.binyu.rbac.dtos.Role;
 
 /**
@@ -40,4 +43,7 @@ public interface RoleMapper
   void deleteRoleById(int id);
 
   Role getRoleById(int id);
+
+  Role[] getRolesByDomainAndUserNames(@Param(value = "domain") String domain,
+      @Param(value = "userNames") List<String> userNameList);
 }

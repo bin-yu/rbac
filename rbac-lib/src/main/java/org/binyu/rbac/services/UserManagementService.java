@@ -5,9 +5,10 @@ package org.binyu.rbac.services;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import org.binyu.rbac.auth.EncryptionUtil;
+import org.binyu.rbac.auth.local.EncryptionUtil;
 import org.binyu.rbac.daos.ResourcePermissionMapper;
 import org.binyu.rbac.daos.RoleMapper;
 import org.binyu.rbac.daos.UserMapper;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Administrator
@@ -48,12 +50,13 @@ public class UserManagementService
     return permRepo.getResourcePermissionsByUser(username);
   }
 
-  public User getUserByName(String username)
+  public User getUserByDomainAndName(String domain, String username)
   {
-    return userRepo.getUserByName(username);
+    return userRepo.getUserByDomainAndName(domain, username);
   }
 
-  public void addUser(User user) throws ServiceInputValidationException
+  @Transactional(rollbackFor = Exception.class)
+  public User addUser(User user) throws ServiceInputValidationException
   {
     try
     {
@@ -63,6 +66,7 @@ public class UserManagementService
       user.setUpdateTime(d);
       user.setPassword(encryptionUtil.encryptHMAC(user.getPassword()));
       userRepo.addUser(user);
+      return user;
     }
     catch (DataIntegrityViolationException e)
     {
@@ -72,16 +76,17 @@ public class UserManagementService
     }
   }
 
-  public void deleteUserByName(String name)
+  /*public void deleteUserByName(String name)
   {
     userRepo.deleteUserByName(name);
-  }
-
+  }*/
+  @Transactional(rollbackFor = Exception.class)
   public void deleteUserRolesByUserId(int userId)
   {
     userRoleRepo.deleteUserRolesByUserId(userId);
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public void addUserRole(UserRole userRole)
   {
     userRoleRepo.addUserRole(userRole);
@@ -97,11 +102,13 @@ public class UserManagementService
     return userRepo.getUserById(id);
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public void deleteUserById(int id)
   {
     userRepo.deleteUserById(id);
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public void updateUser(User user)
   {
     // user server date
@@ -121,6 +128,7 @@ public class UserManagementService
     return roleRepo.getRolesByUserId(userId);
   }
 
+  @Transactional(rollbackFor = Exception.class)
   public void assignRoles(int userId, int[] roleIds, boolean overwrite) throws ServiceInputValidationException
   {
 
@@ -154,6 +162,25 @@ public class UserManagementService
         }
       }
     }
+  }
+
+  @Transactional(rollbackFor = Exception.class)
+  public User getOrCreateUser(String domain, String username) throws ServiceInputValidationException
+  {
+    User localUser = userRepo.getUserByDomainAndName(domain, username);
+    if (localUser == null)
+    {
+      LOG.info("User " + domain + "\\" + username + " not exist in local db, so trying to create it...");
+
+      localUser = addUser(new User(domain, username, null));
+    }
+    LOG.info("User " + domain + "\\" + username + " maps to local db : " + localUser);
+    return localUser;
+  }
+
+  public Role[] getRolesByDomainAndUserNames(String domain, List<String> userNameList)
+  {
+    return roleRepo.getRolesByDomainAndUserNames(domain, userNameList);
   }
 
 }

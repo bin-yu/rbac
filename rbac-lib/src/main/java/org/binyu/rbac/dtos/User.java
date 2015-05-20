@@ -33,6 +33,7 @@ public class User implements Serializable
   private int id;
   private String name;
 
+  private String domain;
   private String password;
   private Date createTime;
   private Date updateTime;
@@ -46,17 +47,18 @@ public class User implements Serializable
     super();
   }
 
-  public User(int id, String name)
+  public User(String domain, String name, String password)
   {
-    super();
-    this.id = id;
+    this.domain = domain;
     this.name = name;
+    this.password = password;
   }
 
-  public User(int id, String name, String password, Date createTime, Date updateTime, int deleted)
+  public User(int id, String domain, String name, String password, Date createTime, Date updateTime, int deleted)
   {
     super();
     this.id = id;
+    this.domain = domain;
     this.name = name;
     this.password = password;
     this.createTime = createTime;
@@ -67,6 +69,7 @@ public class User implements Serializable
   public User(User copy)
   {
     this.id = copy.id;
+    this.domain = copy.domain;
     this.name = copy.name;
     this.password = copy.password;
     this.createTime = copy.createTime;
@@ -83,19 +86,13 @@ public class User implements Serializable
   // ACCESSOR METHODS -----------------------------------------------
 
   @Override
-  public String toString()
-  {
-    return "User [id=" + id + ", name=" + name + ", createTime=" + createTime + ", updateTime="
-        + updateTime + ", deleted=" + deleted + "]";
-  }
-
-  @Override
   public int hashCode()
   {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((createTime == null) ? 0 : createTime.hashCode());
     result = prime * result + deleted;
+    result = prime * result + ((domain == null) ? 0 : domain.hashCode());
     result = prime * result + id;
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((password == null) ? 0 : password.hashCode());
@@ -121,6 +118,13 @@ public class User implements Serializable
     else if (!createTime.equals(other.createTime))
       return false;
     if (deleted != other.deleted)
+      return false;
+    if (domain == null)
+    {
+      if (other.domain != null)
+        return false;
+    }
+    else if (!domain.equals(other.domain))
       return false;
     if (id != other.id)
       return false;
@@ -151,6 +155,23 @@ public class User implements Serializable
   public int getId()
   {
     return id;
+  }
+
+  @Override
+  public String toString()
+  {
+    return "User [id=" + id + ", name=" + name + ", domain=" + domain + ", createTime=" + createTime + ", updateTime=" + updateTime
+        + ", deleted=" + deleted + "]";
+  }
+
+  public String getDomain()
+  {
+    return domain;
+  }
+
+  public void setDomain(String domain)
+  {
+    this.domain = domain;
   }
 
   public void setId(int id)
