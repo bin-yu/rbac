@@ -30,6 +30,10 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-ldap</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-openid</artifactId>
+		</dependency>
 		<!-- mybatis libs -->
 		<dependency>
 			<groupId>org.mybatis</groupId>

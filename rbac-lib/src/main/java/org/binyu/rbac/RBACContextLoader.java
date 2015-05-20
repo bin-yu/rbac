@@ -13,6 +13,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * @author Administrator
@@ -50,6 +51,11 @@ public class RBACContextLoader
   public RBACWebSecurityExpressionHandler getExpressionHandler()
   {
     return ctx.getBean(RBACWebSecurityExpressionHandler.class);
+  }
+
+  public UserDetailsService getUserDetailsService()
+  {
+    return ctx.getBean(UserDetailsService.class);
   }
 
 }

@@ -13,7 +13,7 @@ package org.binyu.rbac.auth.local;
 
 import java.util.Arrays;
 
-import org.binyu.rbac.dtos.Domain;
+import org.binyu.rbac.auth.CompositeAuthenticationToken;
 import org.binyu.rbac.dtos.Role;
 import org.binyu.rbac.dtos.User;
 import org.binyu.rbac.exceptions.ServiceInputValidationException;
@@ -60,7 +60,8 @@ public class LocalUserDetailsService implements UserDetailsService
         throw new UsernameNotFoundException(
             "the username can not be empty.");
       }
-      User user = userSrv.getUserByDomainAndName(Domain.LOCAL_DOMAIN, username);
+      CompositeAuthenticationToken token = new CompositeAuthenticationToken(username, null);
+      User user = userSrv.getUserByDomainAndName(token.getDomain(), (String) token.getPrincipal());
       if (user == null)
       {
         throw new UsernameNotFoundException("the username " + username
@@ -85,6 +86,5 @@ public class LocalUserDetailsService implements UserDetailsService
   // PROTECTED METHODS ----------------------------------------------
 
   // PRIVATE METHODS ------------------------------------------------
-
   // ACCESSOR METHODS -----------------------------------------------
 }

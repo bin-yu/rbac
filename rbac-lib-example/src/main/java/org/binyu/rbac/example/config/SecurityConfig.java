@@ -68,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
       }
 
     });
+    http.rememberMe().userDetailsService(rbac.getUserDetailsService());
   }
 
   static class UpdateRequestMatcher implements RequestMatcher

@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.configurers.ExceptionH
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
@@ -29,50 +30,57 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RestAuthConfigure extends
-		SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+    SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity>
+{
 
-	@Autowired
-	private UserManagementService userSrv;
+  @Autowired
+  private UserManagementService userSrv;
 
-	public void init(HttpSecurity http) throws Exception {
-		registerDefaultAuthenticationEntryPoint(http);
-	}
+  public void init(HttpSecurity http) throws Exception
+  {
+    registerDefaultAuthenticationEntryPoint(http);
+  }
 
-	@SuppressWarnings("unchecked")
-	private void registerDefaultAuthenticationEntryPoint(HttpSecurity http) {
-		ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling = http
-				.getConfigurer(ExceptionHandlingConfigurer.class);
-		if (exceptionHandling == null) {
-			return;
-		}
-		exceptionHandling.defaultAuthenticationEntryPointFor(
-				postProcess(new AuthenticationEntryPoint() {
+  @SuppressWarnings("unchecked")
+  private void registerDefaultAuthenticationEntryPoint(HttpSecurity http)
+  {
+    ExceptionHandlingConfigurer<HttpSecurity> exceptionHandling = http
+        .getConfigurer(ExceptionHandlingConfigurer.class);
+    if (exceptionHandling == null)
+    {
+      return;
+    }
+    exceptionHandling.defaultAuthenticationEntryPointFor(
+        postProcess(new AuthenticationEntryPoint()
+        {
 
-					public void commence(HttpServletRequest request,
-							HttpServletResponse response,
-							AuthenticationException authException)
-							throws IOException, ServletException {
-						// for any authentication exception, send 401
-						response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-								authException.getMessage());
-					}
+          public void commence(HttpServletRequest request,
+              HttpServletResponse response,
+              AuthenticationException authException)
+              throws IOException, ServletException
+          {
+            // for any authentication exception, send 401
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                authException.getMessage());
+          }
 
-				}), AnyRequestMatcher.INSTANCE);
+        }), AnyRequestMatcher.INSTANCE);
 
-	}
+  }
 
-	@Override
-	public void configure(HttpSecurity http) throws Exception {
-		RestAuthenticationFilter authFilter = new RestAuthenticationFilter();
-		AuthenticationManager authenticationManager = http
-				.getSharedObject(AuthenticationManager.class);
-		authFilter.setAuthenticationManager(authenticationManager);
-		authFilter.setSessionAuthenticationStrategy(http
-				.getSharedObject(SessionAuthenticationStrategy.class));
-		authFilter.setUserManagementService(userSrv);
-		// authFilter.setRememberMeServices(rememberMeServices);
-		authFilter = postProcess(authFilter);
-		http.addFilterAfter(authFilter,
-				AbstractPreAuthenticatedProcessingFilter.class);
-	}
+  @Override
+  public void configure(HttpSecurity http) throws Exception
+  {
+    RestAuthenticationFilter authFilter = new RestAuthenticationFilter();
+    AuthenticationManager authenticationManager = http
+        .getSharedObject(AuthenticationManager.class);
+    authFilter.setAuthenticationManager(authenticationManager);
+    authFilter.setSessionAuthenticationStrategy(http
+        .getSharedObject(SessionAuthenticationStrategy.class));
+    authFilter.setUserManagementService(userSrv);
+    authFilter.setRememberMeServices(http.getSharedObject(RememberMeServices.class));
+    authFilter = postProcess(authFilter);
+    http.addFilterAfter(authFilter,
+        AbstractPreAuthenticatedProcessingFilter.class);
+  }
 }

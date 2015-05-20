@@ -108,11 +108,11 @@ public class LocalUserDetails extends User implements UserDetails
     return super.getDeleted() == 0;
   }
 
-@Override
-public String getUsername() {
-	// TODO Auto-generated method stub
-	return super.getName();
-}
+  @Override
+  public String getUsername()
+  {
+    return super.getDomain() + "\\" + super.getName();
+  }
 
   // PROTECTED METHODS ----------------------------------------------
 
