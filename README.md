@@ -18,7 +18,7 @@ Usage
  
 	    <dependency>
 			<groupId>org.binyu</groupId>
-			<artifactId>rbac</artifactId>
+			<artifactId>rbac-lib</artifactId>
 			<version>0.0.1</version>
 	    </dependency>
  2. prepare a db for persisting RBAC objects: for MySQL, you can use rbac-lib-example/src/main/resources/schema-mysql.sql,data-mysql.sql to initialize the database.
