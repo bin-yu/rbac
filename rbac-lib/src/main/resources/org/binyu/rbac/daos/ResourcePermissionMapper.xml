@@ -3,14 +3,22 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.binyu.rbac.daos.ResourcePermissionMapper">
-	<select id="getResourcePermissionsByUser" resultMap="ResourcePermissionMap">
+	<select id="getResourcePermissionsByDomainAndUser" resultMap="ResourcePermissionMap">
 		SELECT RESOURCE.NAME AS RESOURCE_NAME,PERMISSION
 		FROM ROLE_PERMISSION
 		INNER JOIN ROLE ON ROLE.ID=ROLE_PERMISSION.ROLE_ID
 		INNER JOIN RESOURCE ON RESOURCE.ID=ROLE_PERMISSION.RESOURCE_ID
 		INNER JOIN USER_ROLE ON USER_ROLE.ROLE_ID=ROLE.ID
 		INNER JOIN USER ON USER.ID=USER_ROLE.USER_ID
-		WHERE USER.NAME=#{username}
+		WHERE USER.DOMAIN=#{domain} AND USER.NAME=#{username}
+	</select>
+	<select id="getResourcePermissionsByUserId" resultMap="ResourcePermissionMap">
+		SELECT RESOURCE.NAME AS RESOURCE_NAME,PERMISSION
+		FROM ROLE_PERMISSION
+		INNER JOIN ROLE ON ROLE.ID=ROLE_PERMISSION.ROLE_ID
+		INNER JOIN RESOURCE ON RESOURCE.ID=ROLE_PERMISSION.RESOURCE_ID
+		INNER JOIN USER_ROLE ON USER_ROLE.ROLE_ID=ROLE.ID
+		WHERE USER_ROLE.USER_ID=#{userId}
 	</select>
 	<insert id="addResourcePermissionToRole">
 		INSERT

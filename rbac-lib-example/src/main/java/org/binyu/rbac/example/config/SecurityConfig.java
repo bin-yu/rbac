@@ -51,11 +51,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 "/login")),
             new NegatedRequestMatcher(new AntPathRequestMatcher(
                 "/error"))));
-
+    // register our custom SPEL expression handler
     http.authorizeRequests().expressionHandler(rbac.getExpressionHandler());
+    // define the access expression for each URL.
     http.authorizeRequests().antMatchers("/hello/**")
         .access("authenticated and #rbac.accessRes('users')")
         .anyRequest().authenticated();
+    // use our custom RESTfule authentication filter
     http.apply(rbac.getRestAuthConfigure());
     http.logout().logoutSuccessHandler(new LogoutSuccessHandler()
     {

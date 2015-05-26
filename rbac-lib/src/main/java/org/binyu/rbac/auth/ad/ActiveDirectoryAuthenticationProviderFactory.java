@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 /**
  * Factory to create AD type authentication providers
  */
-@Component(value = "ActiveDirectoryAuthenticationProviderFactory")
+@Component("ActiveDirectoryAuthenticationProviderFactory")
 public class ActiveDirectoryAuthenticationProviderFactory implements AuthenticationProviderFactory
 {
 

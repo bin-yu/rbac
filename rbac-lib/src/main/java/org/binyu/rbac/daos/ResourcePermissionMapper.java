@@ -26,7 +26,7 @@ public interface ResourcePermissionMapper
   // CONSTANTS ------------------------------------------------------
 
   // PUBLIC METHODS -------------------------------------------------
-  ResourcePermission[] getResourcePermissionsByUser(String username);
+  // ResourcePermission[] getResourcePermissionsByUser(String username);
 
   void addResourcePermissionToRole(@Param(value = "roleId") int roleId,
       @Param(value = "resourceId") int resourceId,
@@ -41,4 +41,8 @@ public interface ResourcePermissionMapper
       @Param(value = "res") String res);
 
   ResourcePermission[] getResourcePermissionByRoleId(int roleId);
+
+  ResourcePermission[] getResourcePermissionsByDomainAndUser(String domain, String username);
+
+  ResourcePermission[] getResourcePermissionsByUserId(int userId);
 }

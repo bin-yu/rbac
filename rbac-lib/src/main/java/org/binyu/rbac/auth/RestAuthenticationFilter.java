@@ -26,10 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -56,20 +56,19 @@ public class RestAuthenticationFilter extends
         HttpServletResponse response, Authentication authentication)
         throws IOException, ServletException
     {
-      UserDetails principal = (UserDetails) SecurityContextHolder
+      LocalUserDetails user = (LocalUserDetails) SecurityContextHolder
           .getContext().getAuthentication().getPrincipal();
       CsrfToken token = (CsrfToken) request
           .getAttribute("org.springframework.security.web.csrf.CsrfToken");
-      LOG.info("Login succeed, user name is " + principal.getUsername()
+      LOG.info("Login succeed, user name is " + user.getUsername()
           + ", csrf token is " + token.getToken());
 
       response.setContentType(MediaType.APPLICATION_JSON_VALUE);
       response.addHeader(token.getHeaderName(), token.getToken());
       mapper.writeValue(
           response.getOutputStream(),
-          new ExternalUserProfile(principal.getUsername(), userSrv
-              .getResourcePermissionsByUser(principal
-                  .getUsername())));
+          new ExternalUserProfile(user.getUsername(), userSrv
+              .getResourcePermissionsByUserId(user.getId())));
     }
 
   }
@@ -101,7 +100,7 @@ public class RestAuthenticationFilter extends
       ExternalAuthenticationObject authObj = mapper.readValue(
           request.getInputStream(),
           ExternalAuthenticationObject.class);
-      Authentication authRequest = new CompositeAuthenticationToken(authObj.getUser(),
+      Authentication authRequest = new UsernamePasswordAuthenticationToken(authObj.getUser(),
           authObj.getPassword());
       return this.getAuthenticationManager().authenticate(authRequest);
     }

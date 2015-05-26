@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.binyu.rbac.auth.CompositeAuthenticationToken;
-import org.binyu.rbac.auth.local.LocalUserDetails;
+import org.binyu.rbac.auth.LocalUserDetails;
 import org.binyu.rbac.dtos.Role;
 import org.binyu.rbac.dtos.User;
 import org.binyu.rbac.exceptions.ServiceInputValidationException;
@@ -62,10 +62,11 @@ public class ExternalAuthenticationProviderAdapter implements AuthenticationProv
   {
     try
     {
-      CompositeAuthenticationToken token = (CompositeAuthenticationToken) authentication;
+      CompositeAuthenticationToken token = new CompositeAuthenticationToken((String) authentication.getPrincipal(),
+          (String) authentication.getCredentials());
       LOG.info("Token to authentication:" + token);
       String domain = token.getDomain();
-      Authentication authToken = delegate.authenticate(authentication);
+      Authentication authToken = delegate.authenticate(token);
 
       UserDetails user = (UserDetails) authToken.getPrincipal();
       User localUser = userMgr.getOrCreateUser(domain, user.getUsername());
@@ -92,7 +93,7 @@ public class ExternalAuthenticationProviderAdapter implements AuthenticationProv
   @Override
   public boolean supports(Class<?> authentication)
   {
-    return delegate.supports(authentication);
+    return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
   }
 
   // PROTECTED METHODS ----------------------------------------------

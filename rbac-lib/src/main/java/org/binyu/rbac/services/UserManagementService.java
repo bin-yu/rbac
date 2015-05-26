@@ -45,9 +45,14 @@ public class UserManagementService
   @Autowired
   private EncryptionUtil encryptionUtil;
 
-  public ResourcePermission[] getResourcePermissionsByUser(String username)
+  public ResourcePermission[] getResourcePermissionsByDomainAndUser(String domain, String username)
   {
-    return permRepo.getResourcePermissionsByUser(username);
+    return permRepo.getResourcePermissionsByDomainAndUser(domain, username);
+  }
+
+  public ResourcePermission[] getResourcePermissionsByUserId(int userId)
+  {
+    return permRepo.getResourcePermissionsByUserId(userId);
   }
 
   public User getUserByDomainAndName(String domain, String username)

@@ -9,11 +9,10 @@
  *******************************************************************/
 
 // PACKAGE/IMPORTS --------------------------------------------------
-package org.binyu.rbac.auth.local;
+package org.binyu.rbac.auth;
 
 import java.util.Arrays;
 
-import org.binyu.rbac.auth.CompositeAuthenticationToken;
 import org.binyu.rbac.dtos.Role;
 import org.binyu.rbac.dtos.User;
 import org.binyu.rbac.exceptions.ServiceInputValidationException;

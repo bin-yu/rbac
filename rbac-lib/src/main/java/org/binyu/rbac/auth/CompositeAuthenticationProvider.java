@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderNotFoundException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
@@ -58,7 +59,8 @@ public class CompositeAuthenticationProvider implements AuthenticationProvider, 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException
   {
-    CompositeAuthenticationToken token = (CompositeAuthenticationToken) authentication;
+    CompositeAuthenticationToken token = new CompositeAuthenticationToken((String) authentication.getPrincipal(),
+        (String) authentication.getCredentials());
     LOG.info("Authenticating against token " + token);
     String domain = token.getDomain();
     AuthenticationProvider authenticationProvider = delegateProviderMap.get(domain);
@@ -79,7 +81,7 @@ public class CompositeAuthenticationProvider implements AuthenticationProvider, 
   @Override
   public boolean supports(Class<?> authentication)
   {
-    return CompositeAuthenticationToken.class.isAssignableFrom(authentication);
+    return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
   }
 
   /**

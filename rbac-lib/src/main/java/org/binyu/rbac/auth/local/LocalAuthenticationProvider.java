@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @author Administrator
  *
  */
-@Component("localAuthenticationProvider")
+@Component("LocalAuthenticationProvider")
 public class LocalAuthenticationProvider extends DaoAuthenticationProvider
 {
   @Autowired
